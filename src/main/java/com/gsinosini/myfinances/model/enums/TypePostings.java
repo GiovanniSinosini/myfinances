@@ -1,4 +1,4 @@
-package com.gsinosini.myfinances.model.entity;
+package com.gsinosini.myfinances.model.enums;
 
 public enum TypePostings {
 	

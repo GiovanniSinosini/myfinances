@@ -17,8 +17,16 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
+import com.gsinosini.myfinances.model.enums.StatusPostings;
+import com.gsinosini.myfinances.model.enums.TypePostings;
+
+import lombok.Builder;
+import lombok.Data;
+
 @Entity
 @Table(name="postings", schema = "finances")
+@Builder
+@Data
 public class Postings {
 	
 	@Id
@@ -53,152 +61,5 @@ public class Postings {
 	@Column(name="status")
 	@Enumerated(value= EnumType.STRING)
 	private StatusPostings status;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Integer getMonth() {
-		return month;
-	}
-
-	public void setMonth(Integer month) {
-		this.month = month;
-	}
-
-	public Integer getYear() {
-		return year;
-	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public BigDecimal getValue() {
-		return value;
-	}
-
-	public void setValue(BigDecimal value) {
-		this.value = value;
-	}
-
-	public LocalDate getDateRegister() {
-		return dateRegister;
-	}
-
-	public void setDateRegister(LocalDate dateRegister) {
-		this.dateRegister = dateRegister;
-	}
-
-	public TypePostings getType() {
-		return type;
-	}
-
-	public void setType(TypePostings type) {
-		this.type = type;
-	}
-
-	public StatusPostings getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusPostings status) {
-		this.status = status;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dateRegister == null) ? 0 : dateRegister.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((month == null) ? 0 : month.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		result = prime * result + ((year == null) ? 0 : year.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Postings other = (Postings) obj;
-		if (dateRegister == null) {
-			if (other.dateRegister != null)
-				return false;
-		} else if (!dateRegister.equals(other.dateRegister))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (month == null) {
-			if (other.month != null)
-				return false;
-		} else if (!month.equals(other.month))
-			return false;
-		if (status != other.status)
-			return false;
-		if (type != other.type)
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
-			return false;
-		if (year == null) {
-			if (other.year != null)
-				return false;
-		} else if (!year.equals(other.year))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Postings [id=" + id + ", description=" + description + ", month=" + month + ", year=" + year + ", user="
-				+ user + ", value=" + value + ", dateRegister=" + dateRegister + ", type=" + type + ", status=" + status
-				+ "]";
-	}
-	
 
 }
