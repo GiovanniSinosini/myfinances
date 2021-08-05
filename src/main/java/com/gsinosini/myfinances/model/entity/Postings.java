@@ -20,13 +20,17 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import com.gsinosini.myfinances.model.enums.StatusPostings;
 import com.gsinosini.myfinances.model.enums.TypePostings;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="postings", schema = "finances")
+@Table(name="postings")
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Postings {
 	
 	@Id

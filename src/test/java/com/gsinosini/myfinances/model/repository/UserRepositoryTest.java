@@ -32,8 +32,17 @@ public class UserRepositoryTest {
 		Assertions.assertThat(result).isTrue();
 	}
 	
-	
-
-	
+	@Test
+	public void returnsFalseWhenThereIsNoUserWithEmail() {
+		//context
+		userRepository.deleteAll();
+		
+		//action
+		boolean result = userRepository.existsByEmail("userTest@email.com");
+		
+		// verification
+		Assertions.assertThat(result).isFalse();
+		
+	}
 	
 }
