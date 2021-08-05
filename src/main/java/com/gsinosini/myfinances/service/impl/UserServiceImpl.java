@@ -1,8 +1,12 @@
 package com.gsinosini.myfinances.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gsinosini.myfinances.exception.BusinessRuleException;
+import com.gsinosini.myfinances.exception.ErrorAutentication;
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.model.repository.UserRepository;
 import com.gsinosini.myfinances.service.UserService;
@@ -19,14 +23,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User authentication(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<User> user = userRepository.findByEmail(email);
+		
+		if (!user.isPresent()) {
+			throw new ErrorAutentication("User not found.");
+		} else if (!user.get().getPassword().equals(password)) {
+			throw new ErrorAutentication("Invalid password.");
+		}
+		return user.get();
 	}
 
 	@Override
+	@Transactional
 	public User userSave(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		emailValidation(user.getEmail());
+		return userRepository.save(user);
 	}
 
 	@Override
