@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gsinosini.myfinances.exception.BusinessRuleException;
-import com.gsinosini.myfinances.exception.ErrorAutentication;
+import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.model.repository.UserRepository;
 import com.gsinosini.myfinances.service.UserService;
@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
 		Optional<User> user = userRepository.findByEmail(email);
 		
 		if (!user.isPresent()) {
-			throw new ErrorAutentication("User not found.");
+			throw new ErrorAuthentication("User not found.");
 		} else if (!user.get().getPassword().equals(password)) {
-			throw new ErrorAutentication("Invalid password.");
+			throw new ErrorAuthentication("Invalid password.");
 		}
 		return user.get();
 	}
