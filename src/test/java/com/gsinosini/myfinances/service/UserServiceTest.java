@@ -1,33 +1,37 @@
 package com.gsinosini.myfinances.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.gsinosini.myfinances.exception.BusinessRuleException;
-import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.model.repository.UserRepository;
+import com.gsinosini.myfinances.service.impl.UserServiceImpl;
 
-@SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class UserServiceTest {
 	
-	@Autowired
 	UserService userService;
-	
-	@Autowired
 	UserRepository userRepository;
+	
+	@BeforeEach
+	public void setUp() {
+		userRepository = Mockito.mock(UserRepository.class);
+		userService = new UserServiceImpl(userRepository);
+	}
 	
 	@Test
 	public void ValidateEmail() {
 		Assertions.assertDoesNotThrow(() -> {
+			
 		//context
-		userRepository.deleteAll();
+		Mockito.when(userRepository.existsByEmail(Mockito.anyString())).thenReturn(false);
 		
 		//action
 		userService.emailValidation("email@email.com");
@@ -40,8 +44,7 @@ public class UserServiceTest {
 		Assertions.assertThrows(BusinessRuleException.class, () -> {
 		
 		//context
-		User user = User.builder().name("userTest").email("emailTest@email.com").build();
-		userRepository.save(user);
+		Mockito.when(userRepository.existsByEmail(Mockito.anyString())).thenReturn(true);
 		
 		//action
 		userService.emailValidation("emailTest@email.com");
