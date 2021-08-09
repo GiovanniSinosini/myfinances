@@ -3,6 +3,7 @@ package com.gsinosini.myfinances.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -90,5 +91,10 @@ public class PostingsServiceImpl implements PostingsService{
 		if (posting.getType() == null ){
 			throw new BusinessRuleException("Enter a valid type.");
 		}
+	}
+
+	@Override
+	public Optional<Postings> getId(Long id) {
+		return postingRepository.findById(id);
 	}
 }

@@ -1,5 +1,7 @@
 package com.gsinosini.myfinances.service;
 
+import java.util.Optional;
+
 import com.gsinosini.myfinances.model.entity.User;
 
 public interface UserService {
@@ -10,5 +12,6 @@ public interface UserService {
 	
 	void emailValidation (String email);
 	
+	Optional<User> searchById(Long id);
 
 }

@@ -1,6 +1,7 @@
 package com.gsinosini.myfinances.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.gsinosini.myfinances.model.entity.Postings;
 import com.gsinosini.myfinances.model.enums.StatusPostings;
@@ -18,5 +19,7 @@ public interface PostingsService {
 	void updateStatus (Postings posting, StatusPostings status);
 	
 	void validate (Postings posting);
+	
+	Optional<Postings> getId(Long id);
 
 }

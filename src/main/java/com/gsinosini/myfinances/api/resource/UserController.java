@@ -13,15 +13,14 @@ import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 	
-	private UserService userService;
-	
-	public UserController (UserService userService) {
-		this.userService = userService;
-	}
+	private final UserService userService;
 	
 	@PostMapping
 	public ResponseEntity SaveUser( @RequestBody UserDTO userDto) {
