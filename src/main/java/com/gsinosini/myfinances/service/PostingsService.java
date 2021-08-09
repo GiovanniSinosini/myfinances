@@ -16,5 +16,7 @@ public interface PostingsService {
 	List<Postings> search (Postings filterPostings);
 	
 	void updateStatus (Postings posting, StatusPostings status);
+	
+	void validate (Postings posting);
 
 }
