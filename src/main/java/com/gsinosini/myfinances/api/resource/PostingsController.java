@@ -103,14 +103,18 @@ public class PostingsController {
 		posting.setValue(postingDTO.getValue());
 		
 		User user = userService
-			.searchById(postingDTO.getId())
+			.searchById(postingDTO.getUser())
 			.orElseThrow(() -> new BusinessRuleException("User not found."));
 		
 		posting.setUser(user);
-		posting.setType(TypePostings.valueOf(postingDTO.getType()));
-		posting.setStatus(StatusPostings.valueOf(postingDTO.getStatus()));
 		
+		if (postingDTO.getType() != null){
+			posting.setType(TypePostings.valueOf(postingDTO.getType()));
+		}
+		
+		if (postingDTO.getStatus() != null){
+		posting.setStatus(StatusPostings.valueOf(postingDTO.getStatus()));
+		}
 		return posting;
 	}
-	
 }

@@ -26,9 +26,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="postings")
-@Builder
+@Table(name="postings", schema = "finances")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Postings {
