@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gsinosini.myfinances.api.dto.PostingsDTO;
+import com.gsinosini.myfinances.api.dto.UpdateStatusDTO;
 import com.gsinosini.myfinances.exception.BusinessRuleException;
 import com.gsinosini.myfinances.model.entity.Postings;
 import com.gsinosini.myfinances.model.entity.User;
@@ -60,6 +61,24 @@ public class PostingsController {
 			}
 		}).orElseGet(() -> new ResponseEntity ("Posting not found in database.", HttpStatus.BAD_REQUEST));
 	}
+	
+	@PutMapping ("{id}/update-status")
+	public ResponseEntity updateStatus(@PathVariable ("id") Long id, @RequestBody UpdateStatusDTO statusDTO) {
+		return postingsService.getId(id).map(entity -> {
+			StatusPostings statusSelected = StatusPostings.valueOf(statusDTO.getStatus());
+			if (statusSelected == null) {
+				return ResponseEntity.badRequest().body("Invalid status.Try again.");
+			}
+			try {
+				entity.setStatus(statusSelected);
+				postingsService.update(entity);
+				return ResponseEntity.ok(entity);
+			} catch (BusinessRuleException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+		}).orElseGet(() -> new ResponseEntity ("Posting not found in database.", HttpStatus.BAD_REQUEST));
+	}
+	
 		
 	@DeleteMapping("{id}")
 	public ResponseEntity delete(@PathVariable ("id") Long id) {
@@ -83,7 +102,7 @@ public class PostingsController {
 		filterPosting.setYear(year);
 		
 		Optional<User> user = userService.searchById(idUser);
-		if(user.isPresent()) {
+		if(!user.isPresent()) {
 			return ResponseEntity.badRequest().body("User not found.");
 		} else {
 			filterPosting.setUser(user.get());
@@ -93,7 +112,29 @@ public class PostingsController {
 		return ResponseEntity.ok(posting);
 		
 	}
+	/*
+	@GetMapping("{id}")
+	public ResponseEntity getPosting( @PathVariable("id") Long id ) {
+		return postingsService.getId(id)
+					.map( posting -> new ResponseEntity(converter(posting), HttpStatus.OK) )
+					.orElseGet( () -> new ResponseEntity(HttpStatus.NOT_FOUND) );
+	}
 	
+
+	private PostingsDTO converter(Postings postings) {
+		return PostingsDTO.builder()
+					.id(postings.getId())
+					.description(postings.getDescription())
+					.value(postings.getValue())
+					.month(postings.getMonth())
+					.year(postings.getYear())
+					.status(postings.getStatus().name())
+					.type(postings.getType().name())
+					.user(postings.getUser().getId())
+					.build();
+					
+	}
+	*/
 	private Postings converter(PostingsDTO postingDTO) {
 		Postings posting = new Postings();
 		posting.setId(postingDTO.getId());
