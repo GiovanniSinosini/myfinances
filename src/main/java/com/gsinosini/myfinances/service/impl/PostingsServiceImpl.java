@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gsinosini.myfinances.exception.BusinessRuleException;
 import com.gsinosini.myfinances.model.entity.Postings;
 import com.gsinosini.myfinances.model.enums.StatusPostings;
+import com.gsinosini.myfinances.model.enums.TypePostings;
 import com.gsinosini.myfinances.model.repository.PostingsRepository;
 import com.gsinosini.myfinances.service.PostingsService;
 
@@ -96,5 +97,21 @@ public class PostingsServiceImpl implements PostingsService{
 	@Override
 	public Optional<Postings> getId(Long id) {
 		return postingRepository.findById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal getBalanceByUser(Long id) {
+		BigDecimal receipts = postingRepository.getBalanceByTypePosting(id, TypePostings.RECEIPTS);
+		BigDecimal payments = postingRepository.getBalanceByTypePosting(id, TypePostings.PAYMENTS);
+		
+		if (receipts == null) {
+			receipts = BigDecimal.ZERO;
+		}
+		if (payments == null) {
+			payments = BigDecimal.ZERO;
+		}
+		
+		return receipts.subtract(payments);
 	}
 }

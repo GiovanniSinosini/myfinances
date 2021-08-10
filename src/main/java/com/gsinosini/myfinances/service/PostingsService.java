@@ -1,5 +1,6 @@
 package com.gsinosini.myfinances.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +22,7 @@ public interface PostingsService {
 	void validate (Postings posting);
 	
 	Optional<Postings> getId(Long id);
+	
+	BigDecimal getBalanceByUser(Long id);
 
 }

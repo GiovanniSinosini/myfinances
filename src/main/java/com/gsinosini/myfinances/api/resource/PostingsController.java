@@ -112,29 +112,7 @@ public class PostingsController {
 		return ResponseEntity.ok(posting);
 		
 	}
-	/*
-	@GetMapping("{id}")
-	public ResponseEntity getPosting( @PathVariable("id") Long id ) {
-		return postingsService.getId(id)
-					.map( posting -> new ResponseEntity(converter(posting), HttpStatus.OK) )
-					.orElseGet( () -> new ResponseEntity(HttpStatus.NOT_FOUND) );
-	}
 	
-
-	private PostingsDTO converter(Postings postings) {
-		return PostingsDTO.builder()
-					.id(postings.getId())
-					.description(postings.getDescription())
-					.value(postings.getValue())
-					.month(postings.getMonth())
-					.year(postings.getYear())
-					.status(postings.getStatus().name())
-					.type(postings.getType().name())
-					.user(postings.getUser().getId())
-					.build();
-					
-	}
-	*/
 	private Postings converter(PostingsDTO postingDTO) {
 		Postings posting = new Postings();
 		posting.setId(postingDTO.getId());

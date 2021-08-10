@@ -1,7 +1,12 @@
 package com.gsinosini.myfinances.api.resource;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +16,7 @@ import com.gsinosini.myfinances.api.dto.UserDTO;
 import com.gsinosini.myfinances.exception.BusinessRuleException;
 import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
+import com.gsinosini.myfinances.service.PostingsService;
 import com.gsinosini.myfinances.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	
 	private final UserService userService;
+	private final PostingsService postingService;
 	
 	@PostMapping
 	public ResponseEntity SaveUser( @RequestBody UserDTO userDto) {
@@ -47,6 +54,20 @@ public class UserController {
 		} catch (ErrorAuthentication e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
 	}
+	
+	@GetMapping("{id}/balance")
+	public ResponseEntity getBalance(@PathVariable ("id") Long id) {
+		
+		Optional<User> user = userService.searchById(id);
+		
+		if (!user.isPresent()) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		
+		BigDecimal balance = postingService.getBalanceByUser(id);
+		return ResponseEntity.ok(balance);
+	}
+	
+	
 }
