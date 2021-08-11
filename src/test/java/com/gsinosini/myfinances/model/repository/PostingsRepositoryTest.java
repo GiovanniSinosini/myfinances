@@ -90,7 +90,7 @@ public class PostingsRepositoryTest {
 		
 	}
 	
-	private Postings createPosting() {
+	public static Postings createPosting() {
 		return Postings.builder()
 				.year(2021)
 				.month(9)
