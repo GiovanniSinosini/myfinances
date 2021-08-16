@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gsinosini.myfinances.api.dto.UserDTO;
+import com.gsinosini.myfinances.exception.BusinessRuleException;
 import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.service.PostingsService;
@@ -81,6 +82,56 @@ public class UserResourceTest {
 		
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
 													.post (API.concat("/authentication") )
+													.accept(JSON)
+													.contentType(JSON)
+													.content(jsonContent);
+		mvc
+			.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isBadRequest() );
+	}
+	
+	@Test
+	public void postUserTest() throws Exception {
+		// context
+		String email = "user@email.com";
+		String password = "123";
+		
+		UserDTO userDTO = UserDTO.builder().email(email).password(password).build();
+		User user = User.builder().id(1l).email(email).password(password).build();
+		
+		Mockito.when( userService.userSave(Mockito.any(User.class)) ).thenReturn(user);
+		String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+		
+		// action and verification
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post (API)
+													.accept(JSON)
+													.contentType(JSON)
+													.content(jsonContent);
+		mvc
+			.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isCreated())
+			.andExpect(MockMvcResultMatchers.jsonPath("id").value(user.getId()) )
+			.andExpect(MockMvcResultMatchers.jsonPath("name").value(user.getName()) )
+			.andExpect(MockMvcResultMatchers.jsonPath("email").value(user.getEmail()) );
+	}
+	
+	@Test
+	public void notPostUserTestReturnBadRequest() throws Exception {
+		// context
+		String email = "user@email.com";
+		String password = "123";
+		
+		UserDTO userDTO = UserDTO.builder().email(email).password(password).build();
+		
+		Mockito.when( userService.userSave(Mockito.any(User.class)) ).thenThrow(BusinessRuleException.class);
+		String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+		
+		// action and verification
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post (API)
 													.accept(JSON)
 													.contentType(JSON)
 													.content(jsonContent);
