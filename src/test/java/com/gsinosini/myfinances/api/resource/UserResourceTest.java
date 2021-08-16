@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gsinosini.myfinances.api.dto.UserDTO;
+import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.service.PostingsService;
 import com.gsinosini.myfinances.service.UserService;
@@ -44,6 +45,7 @@ public class UserResourceTest {
 		// context
 		String email = "user@email.com";
 		String password = "123";
+		
 		UserDTO userDTO = UserDTO.builder().email(email).password(password).build();
 		User userAuthenticated = User.builder().id(1l).email(email).password(password).build();
 		Mockito.when( userService.authentication(email, password) ).thenReturn(userAuthenticated);
@@ -62,5 +64,28 @@ public class UserResourceTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("id").value(userAuthenticated.getId()) )
 			.andExpect(MockMvcResultMatchers.jsonPath("name").value(userAuthenticated.getName()) )
 			.andExpect(MockMvcResultMatchers.jsonPath("email").value(userAuthenticated.getEmail()) );
+	}
+	
+	@Test
+	public void notAuthUserReturnBadRequest() throws Exception {
+		// context
+		String email = "user@email.com";
+		String password = "123";
+		
+		UserDTO userDTO = UserDTO.builder().email(email).password(password).build();
+		Mockito.when( userService.authentication(email, password) ).thenThrow(ErrorAuthentication.class);
+	
+		String jsonContent = new ObjectMapper().writeValueAsString(userDTO);
+		
+		// action and verification
+		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.post (API.concat("/authentication") )
+													.accept(JSON)
+													.contentType(JSON)
+													.content(jsonContent);
+		mvc
+			.perform(request)
+			.andExpect(MockMvcResultMatchers.status().isBadRequest() );
 	}
 }
