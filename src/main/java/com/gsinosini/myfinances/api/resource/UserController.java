@@ -37,8 +37,8 @@ public class UserController {
 						.email(userDto.getEmail())
 						.password(userDto.getPassword()).build();
 		try {
-			User userSalve = userService.userSave(user);
-			return new ResponseEntity(userSalve, HttpStatus.CREATED);
+			User userSave = userService.userSave(user);
+			return new ResponseEntity(userSave, HttpStatus.CREATED);
 		} catch (BusinessRuleException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -49,7 +49,7 @@ public class UserController {
 
 		try {
 			User authenticatedUser = userService.authentication(userDto.getEmail(), userDto.getPassword());
-			return ResponseEntity.ok().body(authenticatedUser);
+			return ResponseEntity.ok(authenticatedUser);
 		
 		} catch (ErrorAuthentication e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
