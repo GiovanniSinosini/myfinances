@@ -94,12 +94,16 @@ public class PostingsController {
 				@RequestParam(value = "description", required = false) String description,
 				@RequestParam(value = "month", required = false) Integer month,
 				@RequestParam(value = "year", required = false) Integer year,
+				@RequestParam(value = "type", required = false) TypePostings type,
+				@RequestParam(value = "status", required = false) StatusPostings status,
 				@RequestParam("user") Long idUser
 			) {
 		Postings filterPosting = new Postings();
 		filterPosting.setDescription(description);
 		filterPosting.setMonth(month);
 		filterPosting.setYear(year);
+		filterPosting.setType(type);
+		filterPosting.setStatus(status);
 		
 		Optional<User> user = userService.searchById(idUser);
 		if(!user.isPresent()) {
