@@ -120,7 +120,7 @@ public class PostingsController {
 	public ResponseEntity getPostingById ( @PathVariable("id") Long id) {
 		return postingsService.getId(id)
 					.map( posting -> new ResponseEntity (converterToEntity(posting), HttpStatus.OK) )
-					.orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND)) 
+					.orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND) );
 	}
 	
 	private Postings converter(PostingsDTO postingDTO) {
