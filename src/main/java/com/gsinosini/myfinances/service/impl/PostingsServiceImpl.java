@@ -102,8 +102,8 @@ public class PostingsServiceImpl implements PostingsService{
 	@Override
 	@Transactional(readOnly = true)
 	public BigDecimal getBalanceByUser(Long id) {
-		BigDecimal receipts = postingRepository.getBalanceByTypePosting(id, TypePostings.RECEIPTS);
-		BigDecimal payments = postingRepository.getBalanceByTypePosting(id, TypePostings.PAYMENTS);
+		BigDecimal receipts = postingRepository.getBalanceByTypePostingAndStatus(id, TypePostings.RECEIPTS, StatusPostings.EFFECTIVE);
+		BigDecimal payments = postingRepository.getBalanceByTypePostingAndStatus(id, TypePostings.PAYMENTS, StatusPostings.EFFECTIVE);
 		
 		if (receipts == null) {
 			receipts = BigDecimal.ZERO;
