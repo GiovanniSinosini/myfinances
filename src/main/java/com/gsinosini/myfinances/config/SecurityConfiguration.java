@@ -1,5 +1,6 @@
 package com.gsinosini.myfinances.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,8 +11,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.gsinosini.myfinances.service.impl.SecurityUserDetailsService;
+
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	private SecurityUserDetailsService userDetailService;
+	
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -21,13 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		String passwordCoded = passwordEncoder().encode("gcs123");
-		
 		auth	
-			.inMemoryAuthentication()
-			.withUser("user")
-			.password(passwordCoded)
-			.roles("USER");
+			.userDetailsService(userDetailService)
+			.passwordEncoder(passwordEncoder());
 	}
 	
 	@Override
