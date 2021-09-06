@@ -2,6 +2,7 @@ package com.gsinosini.myfinances.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,12 @@ import com.gsinosini.myfinances.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
+	private PasswordEncoder encoder;
 	
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
 		super();
 		this.userRepository = userRepository;
+		this.encoder = encoder;
 	}
 
 	@Override
@@ -27,7 +30,11 @@ public class UserServiceImpl implements UserService {
 		
 		if (!user.isPresent()) {
 			throw new ErrorAuthentication("User not found.");
-		} else if (!user.get().getPassword().equals(password)) {
+		}  
+		
+		boolean passwordMatch = encoder.matches(password, user.get().getPassword());
+		
+		if (!passwordMatch) {
 			throw new ErrorAuthentication("Invalid password.");
 		}
 		return user.get();
@@ -37,7 +44,14 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public User userSave(User user) {
 		emailValidation(user.getEmail());
+		encoderPassword(user);
 		return userRepository.save(user);
+	}
+
+	private void encoderPassword(User user) {
+		String password = user.getPassword();
+		String passwordCoded = encoder.encode(password);
+		user.setPassword(passwordCoded);
 	}
 
 	@Override
