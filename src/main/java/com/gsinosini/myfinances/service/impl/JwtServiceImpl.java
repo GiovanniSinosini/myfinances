@@ -46,17 +46,32 @@ public class JwtServiceImpl implements JwtService{
 
 	@Override
 	public Claims getClaims(String token) throws ExpiredJwtException {
-		return null;
+		return Jwts
+				.parser()
+				.setSigningKey(signatureKey)
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 	@Override
 	public boolean isTokenValid(String token) {
-		return false;
+		try {
+			Claims claims = getClaims(token);
+			java.util.Date dateEx = claims.getExpiration();
+			LocalDateTime dateExpiration = dateEx.toInstant()
+					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+			boolean dataHourValid = LocalDateTime.now().isAfter(dateExpiration);
+			return !dataHourValid;
+		} catch (ExpiredJwtException e) {
+			return false;
+		}
 	}
 
 	@Override
 	public String getLoginUser(String token) {
-		return null;
+		Claims claims = getClaims(token);
+		
+		return claims.getSubject();
+				
 	}
-
 }
