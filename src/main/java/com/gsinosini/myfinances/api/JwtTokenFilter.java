@@ -37,7 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter  {
 		
 		String authorization = request.getHeader("Authorization");
 		
-		if(authorization != null && authorization.startsWith("Barrer")) {
+		if(authorization != null && authorization.startsWith("Bearer")) {
 			String token = authorization.split(" ")[1];
 			boolean isTokenValid = jwtService.isTokenValid(token);
 			
@@ -51,8 +51,8 @@ public class JwtTokenFilter extends OncePerRequestFilter  {
 			user.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(user);
 			
-			filterChain.doFilter(request, response);
 			}
 		}
+		filterChain.doFilter(request, response);
 	}
 }
