@@ -10,7 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.gsinosini.myfinances.api.JwtTokenFilter;
+import com.gsinosini.myfinances.service.JwtService;
 import com.gsinosini.myfinances.service.impl.SecurityUserDetailsService;
 
 @EnableWebSecurity
@@ -18,7 +21,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private SecurityUserDetailsService userDetailService;
-	
+	@Autowired
+	private JwtService jwtService;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -26,6 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		return encoder;
 	}
 	
+	@Bean
+	public JwtTokenFilter jwtTokenFilter() {
+		return new JwtTokenFilter(jwtService, userDetailService);
+	}
+	
+		
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth	
@@ -44,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
-			.httpBasic();
+			.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		
 	}
 }
