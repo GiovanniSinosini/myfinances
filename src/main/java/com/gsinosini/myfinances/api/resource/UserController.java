@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gsinosini.myfinances.api.dto.TokenDTO;
 import com.gsinosini.myfinances.api.dto.UserDTO;
 import com.gsinosini.myfinances.exception.BusinessRuleException;
 import com.gsinosini.myfinances.exception.ErrorAuthentication;
 import com.gsinosini.myfinances.model.entity.User;
+import com.gsinosini.myfinances.service.JwtService;
 import com.gsinosini.myfinances.service.PostingsService;
 import com.gsinosini.myfinances.service.UserService;
 
@@ -28,6 +30,7 @@ public class UserController {
 	
 	private final UserService userService;
 	private final PostingsService postingService;
+	private final JwtService jwtService;
 	
 	@PostMapping
 	public ResponseEntity SaveUser( @RequestBody UserDTO userDto) {
@@ -45,12 +48,13 @@ public class UserController {
 	}
 	
 	@PostMapping("/authentication")
-	public ResponseEntity UserAuthentication( @RequestBody UserDTO userDto) {
+	public ResponseEntity<?> UserAuthentication( @RequestBody UserDTO userDto) {
 
 		try {
 			User authenticatedUser = userService.authentication(userDto.getEmail(), userDto.getPassword());
-			return ResponseEntity.ok(authenticatedUser);
-		
+			String token = jwtService.generateToken(authenticatedUser);
+			TokenDTO tokenDTO = new TokenDTO(authenticatedUser.getName(), token);
+			return ResponseEntity.ok(tokenDTO);
 		} catch (ErrorAuthentication e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}

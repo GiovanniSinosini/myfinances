@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.gsinosini.myfinances.model.entity.User;
 import com.gsinosini.myfinances.service.JwtService;
@@ -16,6 +17,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Service
 public class JwtServiceImpl implements JwtService{
 	
 	@Value("${jwt.expiration}")
