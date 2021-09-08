@@ -9,7 +9,7 @@ public interface JwtService {
 	
 	String generateToken(User user);
 	
-	Claims getClaims(String token) throws ExpiredJwtException;
+	Claims obtainClaims(String token) throws ExpiredJwtException;
 	
 	boolean isTokenValid(String token);
 	

@@ -39,6 +39,7 @@ public class JwtServiceImpl implements JwtService{
 							.builder()
 							.setExpiration(date)
 							.setSubject(user.getEmail())
+							.claim("userid", user.getId())
 							.claim("name", user.getName())
 							.claim("hourExpiration", hourExpirationToken)
 							.signWith(SignatureAlgorithm.HS512, signatureKey) 
@@ -47,7 +48,7 @@ public class JwtServiceImpl implements JwtService{
 	}
 
 	@Override
-	public Claims getClaims(String token) throws ExpiredJwtException {
+	public Claims obtainClaims(String token) throws ExpiredJwtException {
 		return Jwts
 				.parser()
 				.setSigningKey(signatureKey)
@@ -58,7 +59,7 @@ public class JwtServiceImpl implements JwtService{
 	@Override
 	public boolean isTokenValid(String token) {
 		try {
-			Claims claims = getClaims(token);
+			Claims claims = obtainClaims(token);
 			java.util.Date dateEx = claims.getExpiration();
 			LocalDateTime dateExpiration = dateEx.toInstant()
 					.atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -71,7 +72,7 @@ public class JwtServiceImpl implements JwtService{
 
 	@Override
 	public String getLoginUser(String token) {
-		Claims claims = getClaims(token);
+		Claims claims = obtainClaims(token);
 		
 		return claims.getSubject();
 				
