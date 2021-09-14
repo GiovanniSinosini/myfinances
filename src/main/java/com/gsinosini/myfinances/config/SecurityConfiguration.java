@@ -69,12 +69,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	public FilterRegistrationBean<CorsFilter> corsFilter(){
 		
 		List<String> all = Arrays.asList("*");
+		List<String> headers = Arrays.asList("https://myfinances-7-app.herokuapp.com", "http://localhost:3000" );
 		
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedMethods(all);
-		config.setAllowedOriginPatterns(all);
+		config.setAllowedOrigins(headers);
+		//config.setAllowedOriginPatterns(all);
 		config.setAllowedHeaders(all);
 		config.setAllowCredentials(true);
+	
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
